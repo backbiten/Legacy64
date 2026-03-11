@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/backbiten/Legacy64/schemas/binding.schema.json",
+  "title": "LegacyAI Source-Patch Binding Record",
+  "description": "Records the relationship between a source artifact (baseline) and one or more patches or a patchset.",
+  "type": "object",
+  "required": ["id", "type", "source_artifact_id", "patch_ids", "tags", "created_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "UUID of this binding record."
+    },
+    "type": {
+      "type": "string",
+      "const": "source-patch",
+      "description": "Binding type identifier."
+    },
+    "source_artifact_id": {
+      "type": "string",
+      "description": "ID of the source artifact (baseline) being patched."
+    },
+    "patch_ids": {
+      "type": "array",
+      "description": "List of patch IDs (SHA-256) referenced by this binding.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "patchset_id": {
+      "type": ["string", "null"],
+      "description": "Optional patchset ID this binding belongs to, e.g. y2038:fix-time_t-overflow."
+    },
+    "output_artifact_id": {
+      "type": ["string", "null"],
+      "description": "Optional ID of the derived artifact produced after patching."
+    },
+    "tags": {
+      "type": "array",
+      "description": "List of tags, e.g. [\"y2038\"].",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp when the binding was created."
+    }
+  },
+  "additionalProperties": false
+}

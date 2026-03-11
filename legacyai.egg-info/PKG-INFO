@@ -1,3 +1,13 @@
+Metadata-Version: 2.4
+Name: legacyai
+Version: 0.1.0
+Summary: Offline-first preservation tooling for Legacy64/Legacy32 archives with Y2038 patch tracking
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: PyYAML>=5.4
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+
 # Legacy64
 
 Bringing back old AMD 64 bit because someone in the department of system D ditched it.
