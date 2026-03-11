@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+legacyai/__init__.py
+legacyai/__main__.py
+legacyai/cli.py
+legacyai.egg-info/PKG-INFO
+legacyai.egg-info/SOURCES.txt
+legacyai.egg-info/dependency_links.txt
+legacyai.egg-info/entry_points.txt
+legacyai.egg-info/requires.txt
+legacyai.egg-info/top_level.txt
+legacyai/app_pack/__init__.py
+legacyai/app_pack/commands.py
+legacyai/app_pack/generator.py
+legacyai/app_pack/loader.py
+tests/test_generator.py
+tests/test_loader.py
