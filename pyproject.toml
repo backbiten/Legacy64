@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "legacyai"
+version = "0.1.0"
+description = "Offline-first preservation tooling for Legacy64/Legacy32 archives with Y2038 patch tracking"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "PyYAML>=5.4",
+]
+
+[project.scripts]
+legacyai = "legacyai.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["legacyai*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
