@@ -1,0 +1,106 @@
+id: desktop
+description: >
+  macOS desktop app-pack: installs Firefox, Signal Desktop, Tor Browser,
+  Spotify, and sets up Netflix-ready browser access. Applications are installed
+  via Homebrew casks. No proprietary installers are bundled in this repository.
+platform: macos
+licensing_notes: >
+  All applications are installed from their official upstream sources via
+  Homebrew casks (https://brew.sh). No proprietary installers or DRM content
+  are included in this repository. Running the generated script requires
+  network access at install time.
+
+apps:
+  - id: homebrew
+    name: Homebrew
+    description: >
+      Homebrew — the macOS package manager. Required to install all other
+      applications in this pack. If already installed, this step is skipped.
+    licensing_notes: BSD 2-Clause License. https://brew.sh
+    post_install_notes: >
+      Homebrew is installed (or was already present). You may need to follow
+      any post-install instructions printed above to add brew to your PATH.
+    install:
+      package_manager: bash
+      pre_install:
+        - "# Check if Homebrew is already installed"
+      commands:
+        - "command -v brew >/dev/null 2>&1 || /bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+
+  - id: firefox
+    name: Firefox
+    description: Mozilla Firefox — a fast, privacy-respecting open-source web browser.
+    licensing_notes: >
+      Mozilla Public License 2.0. Installed via Homebrew cask (firefox).
+    post_install_notes: >
+      Firefox is ready to use. For Netflix playback, ensure "DRM content" is
+      enabled in Firefox Preferences > General > Digital Rights Management (DRM).
+    install:
+      package_manager: brew
+      commands:
+        - "brew install --cask firefox"
+
+  - id: signal
+    name: Signal Desktop
+    description: >
+      Signal — end-to-end encrypted messaging and voice/video calls.
+    licensing_notes: >
+      AGPLv3 (desktop client). Installed via Homebrew cask (signal).
+    post_install_notes: >
+      After installing Signal, open it and link your existing Signal account
+      using your mobile phone (Settings > Linked Devices on mobile).
+    install:
+      package_manager: brew
+      commands:
+        - "brew install --cask signal"
+
+  - id: tor_browser
+    name: Tor Browser
+    description: >
+      Tor Browser — privacy-focused browser that routes traffic through the Tor
+      anonymity network.
+    licensing_notes: >
+      BSD / Mozilla Public License. Installed via Homebrew cask (tor-browser).
+    post_install_notes: >
+      Tor Browser is installed in /Applications/Tor Browser.app
+      Launch it from Launchpad or Spotlight.
+    install:
+      package_manager: brew
+      commands:
+        - "brew install --cask tor-browser"
+
+  - id: spotify
+    name: Spotify
+    description: Spotify desktop client for music streaming.
+    licensing_notes: >
+      Proprietary (Spotify AB). Installed via Homebrew cask (spotify).
+      Requires a Spotify account.
+    post_install_notes: >
+      Spotify requires a Spotify account to use. Sign in at https://www.spotify.com
+      A free account is available; a Premium subscription is optional.
+    install:
+      package_manager: brew
+      commands:
+        - "brew install --cask spotify"
+
+  - id: netflix_ready
+    name: Netflix (browser-based access)
+    description: >
+      Netflix does not ship a standalone macOS desktop app outside the App Store.
+      This entry ensures a DRM-capable browser is installed and creates an alias
+      in the Dock/Desktop for Netflix. No DRM circumvention is performed.
+    licensing_notes: >
+      Netflix is a proprietary streaming service. This pack does NOT install
+      Netflix software; it only ensures a compatible browser is present and
+      creates a convenience shortcut. Users must have a valid Netflix account.
+    post_install_notes: >
+      To watch Netflix, open Firefox and navigate to https://www.netflix.com
+      Sign in with your Netflix account. Firefox includes Widevine CDM for
+      DRM-protected playback; enable it when prompted.
+
+      A Netflix shortcut has been added to ~/Desktop/Netflix.webloc
+    install:
+      package_manager: bash
+      commands:
+        - "mkdir -p ~/Desktop"
+        - "printf '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\\n<plist version=\"1.0\">\\n<dict>\\n\\t<key>URL</key>\\n\\t<string>https://www.netflix.com</string>\\n</dict>\\n</plist>\\n' > ~/Desktop/Netflix.webloc"
