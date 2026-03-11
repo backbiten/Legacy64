@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution / packaging
+*.tar.gz
+*.whl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# legacyai config (auto-generated; commit intentionally when needed)
+# .legacyai.yml
+
+# Objects store – large binary blobs are intentionally NOT ignored here;
+# they are tracked so the archive is self-contained.  If you are using
+# Git LFS, configure it separately.

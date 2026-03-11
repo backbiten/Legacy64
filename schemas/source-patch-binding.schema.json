@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/backbiten/Legacy64/schemas/source-patch-binding.schema.json",
+  "title": "Source-Patch Binding Record",
+  "description": "Links a legacy32 and legacy64 artifact via a shared upstream source plus build-profile patches. No conversion implied.",
+  "type": "object",
+  "required": ["id", "type", "source", "legacy32_artifact", "legacy64_artifact", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique binding identifier (UUID v4)",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "type": {
+      "type": "string",
+      "description": "Binding type (always source-patch for this schema)",
+      "enum": ["source-patch"]
+    },
+    "source": {
+      "type": "object",
+      "description": "Upstream source reference",
+      "required": ["ref"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": {
+          "type": "string",
+          "description": "Upstream source reference: a git tag/commit, tarball URL, or object hash",
+          "minLength": 1
+        },
+        "repo": {
+          "type": "string",
+          "description": "Upstream repository (owner/repo or full URL)"
+        }
+      }
+    },
+    "legacy32_artifact": {
+      "type": "string",
+      "description": "ID of the legacy32 artifact record (UUID v4)",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "legacy64_artifact": {
+      "type": "string",
+      "description": "ID of the legacy64 artifact record (UUID v4)",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "patch_file": {
+      "type": "string",
+      "description": "Relative path to the patch file under patches/"
+    },
+    "patch_sha256": {
+      "type": "string",
+      "description": "SHA-256 hex digest of the patch file",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "description": "ISO 8601 timestamp when this binding was created",
+      "format": "date-time"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the relationship"
+    },
+    "build_profiles": {
+      "type": "object",
+      "description": "Build environment profiles for reproducibility",
+      "additionalProperties": false,
+      "properties": {
+        "legacy32": {
+          "$ref": "#/$defs/build_profile"
+        },
+        "legacy64": {
+          "$ref": "#/$defs/build_profile"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "build_profile": {
+      "type": "object",
+      "description": "Build environment specification for one lane",
+      "additionalProperties": false,
+      "properties": {
+        "toolchain": {
+          "type": "string",
+          "description": "Compiler/toolchain identifier (e.g. gcc-13.2, clang-17, msvc-14.3)"
+        },
+        "triplet": {
+          "type": "string",
+          "description": "GNU/LLVM target triplet (e.g. i686-pc-linux-gnu, x86_64-linux-gnu)"
+        },
+        "build_flags": {
+          "type": "array",
+          "description": "Compiler/build flags",
+          "items": {"type": "string"}
+        },
+        "patches": {
+          "type": "array",
+          "description": "Additional patch files applied for this lane",
+          "items": {"type": "string"}
+        },
+        "notes": {
+          "type": "string",
+          "description": "Free-form build notes"
+        }
+      }
+    }
+  }
+}

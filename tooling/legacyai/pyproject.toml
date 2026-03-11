@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "legacyai"
+version = "0.1.0"
+description = "Legacy64 preservation CLI – offline-first content-addressed artifact store"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = [
+    "PyYAML>=6.0",
+    "jsonschema>=4.0",
+]
+
+[project.scripts]
+legacyai = "legacyai.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["legacyai*"]
+
+[tool.setuptools.package-data]
+legacyai = ["schemas/*.json"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1",
+]
