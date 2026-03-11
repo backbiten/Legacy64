@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "legacyai"
+version = "0.1.0"
+description = "Legacy64 artifact management and offline safety/QC/QA scanning CLI"
+requires-python = ">=3.8"
+
+[project.scripts]
+legacyai = "legacyai.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["legacyai*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

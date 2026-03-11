@@ -1,0 +1,3 @@
+# Safe text file fixture for Legacy64 tests
+This is a plain text file used as a safe fixture.
+It contains no executable code, no secrets, and no suspicious content.
