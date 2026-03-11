@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "copilot/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    name: Test legacyai CLI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install legacyai with dev dependencies
+        run: pip install -e "./tooling/legacyai[dev]"
+
+      - name: Run unit tests
+        run: pytest tooling/legacyai/tests/ -v
+
+  verify:
+    name: Verify repository state
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install legacyai
+        run: pip install "./tooling/legacyai"
+
+      - name: Run legacyai verify
+        run: legacyai verify
