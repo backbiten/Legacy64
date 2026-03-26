@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/backbiten/Legacy64/schemas/app_pack.schema.json",
+  "title": "AppPack",
+  "description": "Schema for Legacy64 app-pack manifests. Describes a collection of applications to be installed from official sources.",
+  "type": "object",
+  "required": ["id", "description", "platform", "apps"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the app-pack (e.g. 'desktop').",
+      "pattern": "^[a-z0-9_-]+$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what the pack installs."
+    },
+    "platform": {
+      "type": "string",
+      "description": "Target platform.",
+      "enum": ["linux", "windows", "macos"]
+    },
+    "licensing_notes": {
+      "type": "string",
+      "description": "Legal / licensing statement for the pack. Should clarify that no proprietary binaries are bundled."
+    },
+    "apps": {
+      "type": "array",
+      "description": "Ordered list of applications in the pack.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/app"
+      }
+    }
+  },
+  "definitions": {
+    "app": {
+      "type": "object",
+      "required": ["id", "name", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the app within the pack.",
+          "pattern": "^[a-z0-9_-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the application."
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description of the application."
+        },
+        "post_install_notes": {
+          "type": "string",
+          "description": "Notes displayed after installation instructions."
+        },
+        "licensing_notes": {
+          "type": "string",
+          "description": "Per-app licensing statement."
+        },
+        "install": {
+          "$ref": "#/definitions/install_entry"
+        },
+        "distros": {
+          "type": "object",
+          "description": "Per-distro install entries (Linux only).",
+          "additionalProperties": {
+            "$ref": "#/definitions/install_entry"
+          }
+        }
+      }
+    },
+    "install_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "package_manager": {
+          "type": "string",
+          "description": "The package manager used (apt, dnf, pacman, winget, brew, etc.)."
+        },
+        "pre_install": {
+          "type": "array",
+          "description": "Commands to run before installing the package (e.g. adding signing keys, repos).",
+          "items": {"type": "string"}
+        },
+        "commands": {
+          "type": "array",
+          "description": "Installation commands.",
+          "items": {"type": "string"}
+        },
+        "post_install": {
+          "type": "array",
+          "description": "Commands to run after the package is installed.",
+          "items": {"type": "string"}
+        }
+      }
+    }
+  }
+}

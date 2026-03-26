@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "legacyai"
+version = "0.1.0"
+description = "Legacy64 — app-pack manifests and install-script generator for legacy 32/64-bit systems"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+validation = [
+    "jsonschema>=4.0",
+]
+dev = [
+    "pytest>=7.0",
+    "jsonschema>=4.0",
+]
+
+[project.scripts]
+legacyai = "legacyai.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["legacyai*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

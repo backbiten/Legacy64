@@ -1,0 +1,96 @@
+id: desktop
+description: >
+  Windows desktop app-pack: installs Firefox, Signal Desktop, Tor Browser,
+  Spotify, and sets up Netflix-ready browser access. Applications are installed
+  via Windows Package Manager (winget) with Chocolatey as a documented fallback.
+  No proprietary installers are bundled in this repository.
+platform: windows
+licensing_notes: >
+  All applications are installed from their official upstream sources via winget
+  (Windows Package Manager) or Chocolatey. No proprietary installers or DRM
+  content are included in this repository. Running the generated script requires
+  network access at install time.
+
+apps:
+  - id: firefox
+    name: Firefox
+    description: Mozilla Firefox — a fast, privacy-respecting open-source web browser.
+    licensing_notes: >
+      Mozilla Public License 2.0. Available via winget (Mozilla.Firefox) and
+      Chocolatey (firefox).
+    post_install_notes: >
+      Firefox is ready to use. For Netflix playback, ensure "DRM content" is
+      enabled in Firefox Preferences > General > Digital Rights Management (DRM).
+    install:
+      package_manager: winget
+      commands:
+        - "winget install --id Mozilla.Firefox -e --accept-source-agreements --accept-package-agreements"
+
+  - id: signal
+    name: Signal Desktop
+    description: >
+      Signal — end-to-end encrypted messaging and voice/video calls.
+    licensing_notes: >
+      AGPLv3 (desktop client). Available via winget (OpenWhisperSystems.Signal).
+    post_install_notes: >
+      After installing Signal, open it and link your existing Signal account
+      using your mobile phone (Settings > Linked Devices on mobile).
+    install:
+      package_manager: winget
+      commands:
+        - "winget install --id OpenWhisperSystems.Signal -e --accept-source-agreements --accept-package-agreements"
+
+  - id: tor_browser
+    name: Tor Browser
+    description: >
+      Tor Browser — privacy-focused browser that routes traffic through the Tor
+      anonymity network.
+    licensing_notes: >
+      BSD / Mozilla Public License. Available via winget (TorProject.TorBrowser).
+    post_install_notes: >
+      Tor Browser will be installed. Launch it from the Start Menu or Desktop.
+    install:
+      package_manager: winget
+      commands:
+        - "winget install --id TorProject.TorBrowser -e --accept-source-agreements --accept-package-agreements"
+
+  - id: spotify
+    name: Spotify
+    description: Spotify desktop client for music streaming.
+    licensing_notes: >
+      Proprietary (Spotify AB). Available via winget (Spotify.Spotify).
+      Requires a Spotify account.
+    post_install_notes: >
+      Spotify requires a Spotify account to use. Sign in at https://www.spotify.com
+      A free account is available; a Premium subscription is optional.
+    install:
+      package_manager: winget
+      commands:
+        - "winget install --id Spotify.Spotify -e --accept-source-agreements --accept-package-agreements"
+
+  - id: netflix_ready
+    name: Netflix (browser-based access)
+    description: >
+      Netflix does not ship a native Windows desktop app (outside of the Microsoft
+      Store app). This entry ensures a DRM-capable browser is installed and creates
+      a desktop shortcut to Netflix. No DRM circumvention is performed.
+    licensing_notes: >
+      Netflix is a proprietary streaming service. This pack does NOT install
+      Netflix software; it only ensures a compatible browser is present and
+      creates a convenience shortcut. Users must have a valid Netflix account.
+    post_install_notes: >
+      To watch Netflix, open Firefox and navigate to https://www.netflix.com
+      Sign in with your Netflix account. Firefox includes Widevine CDM for
+      DRM-protected playback; enable it when prompted.
+
+      A desktop shortcut to Netflix will be created on your Desktop.
+    install:
+      package_manager: winget
+      commands:
+        - "$desktopPath = [Environment]::GetFolderPath('Desktop')"
+        - "$shell = New-Object -ComObject WScript.Shell"
+        - "$shortcut = $shell.CreateShortcut(\"$desktopPath\\Netflix.lnk\")"
+        - "$shortcut.TargetPath = 'C:\\Program Files\\Mozilla Firefox\\firefox.exe'"
+        - "$shortcut.Arguments = 'https://www.netflix.com'"
+        - "$shortcut.Description = 'Watch Netflix in Firefox'"
+        - "$shortcut.Save()"

@@ -1,0 +1,178 @@
+id: desktop
+description: >
+  Linux desktop app-pack: installs Firefox, Signal Desktop, Tor Browser Launcher,
+  Spotify, and sets up a Netflix-ready browser environment. Applications are fetched
+  from official repositories or package managers — no proprietary binaries are bundled
+  in this repository.
+platform: linux
+licensing_notes: >
+  All applications are installed from their official upstream sources (distribution
+  package repositories, official vendor APT/RPM/AUR packages). No proprietary
+  installers or DRM content are included in this repository. Running the generated
+  script requires network access at install time.
+
+apps:
+  - id: firefox
+    name: Firefox
+    description: Mozilla Firefox — a fast, privacy-respecting open-source web browser.
+    licensing_notes: >
+      Mozilla Public License 2.0. Distributed by most Linux distros in their official
+      repositories.
+    post_install_notes: >
+      Firefox is ready to use. For Netflix playback, ensure "DRM content" is enabled
+      in Firefox Preferences > General > Digital Rights Management (DRM) Content.
+    distros:
+      debian_ubuntu:
+        package_manager: apt
+        pre_install:
+          - "apt-get update -y"
+        commands:
+          - "apt-get install -y firefox"
+      fedora_rhel:
+        package_manager: dnf
+        commands:
+          - "dnf install -y firefox"
+      arch_manjaro:
+        package_manager: pacman
+        commands:
+          - "pacman -S --noconfirm firefox"
+
+  - id: signal
+    name: Signal Desktop
+    description: >
+      Signal — end-to-end encrypted messaging and voice/video calls.
+      Installed from the official Signal APT/RPM repository.
+    licensing_notes: >
+      AGPLv3 (desktop client). Installed from Signal's official repository at
+      https://updates.signal.org/desktop/apt
+    post_install_notes: >
+      After installing Signal, open it and link your existing Signal account
+      using your mobile phone (Settings > Linked Devices on mobile).
+    distros:
+      debian_ubuntu:
+        package_manager: apt
+        pre_install:
+          - "apt-get install -y wget gnupg"
+          - "wget -qO- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor -o /usr/share/keyrings/signal-desktop-keyring.gpg"
+          - "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | tee /etc/apt/sources.list.d/signal-xenial.list"
+          - "apt-get update -y"
+        commands:
+          - "apt-get install -y signal-desktop"
+      fedora_rhel:
+        package_manager: dnf
+        pre_install:
+          - "dnf install -y 'dnf-command(config-manager)'"
+          - "dnf config-manager --add-repo https://updates.signal.org/desktop/rpm/signal.repo"
+        commands:
+          - "dnf install -y signal-desktop"
+      arch_manjaro:
+        package_manager: yay
+        pre_install:
+          - "# AUR helper (yay) must be installed first: https://github.com/Jguer/yay"
+        commands:
+          - "yay -S --noconfirm signal-desktop"
+
+  - id: tor_browser
+    name: Tor Browser
+    description: >
+      Tor Browser — privacy-focused browser that routes traffic through the Tor
+      anonymity network. Installed via the official tor-browser-launcher package
+      (available in most distros) or directly from the Tor Project.
+    licensing_notes: >
+      BSD / Mozilla Public License. Available from https://www.torproject.org/
+    post_install_notes: >
+      Run 'tor-browser-launcher' to download and launch Tor Browser. The launcher
+      will fetch the latest Tor Browser bundle from the Tor Project on first run.
+    distros:
+      debian_ubuntu:
+        package_manager: apt
+        pre_install:
+          - "apt-get update -y"
+        commands:
+          - "apt-get install -y torbrowser-launcher"
+      fedora_rhel:
+        package_manager: dnf
+        commands:
+          - "dnf install -y torbrowser-launcher"
+      arch_manjaro:
+        package_manager: pacman
+        commands:
+          - "pacman -S --noconfirm torbrowser-launcher"
+
+  - id: spotify
+    name: Spotify
+    description: >
+      Spotify desktop client for music streaming. Installed from the official
+      Spotify APT repository (Debian/Ubuntu) or via Flatpak/Snap (other distros).
+    licensing_notes: >
+      Proprietary (Spotify AB). Installed from Spotify's official package repository.
+      Requires a Spotify account. Free tier available; Premium subscription optional.
+    post_install_notes: >
+      Spotify requires a Spotify account to use. Sign in at https://www.spotify.com
+      A free account is available; a Premium subscription is optional.
+    distros:
+      debian_ubuntu:
+        package_manager: apt
+        pre_install:
+          - "apt-get install -y curl gnupg"
+          - "curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg"
+          - "echo 'deb http://repository.spotify.com stable non-free' | tee /etc/apt/sources.list.d/spotify.list"
+          - "apt-get update -y"
+        commands:
+          - "apt-get install -y spotify-client"
+      fedora_rhel:
+        package_manager: flatpak
+        pre_install:
+          - "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
+        commands:
+          - "flatpak install -y flathub com.spotify.Client"
+      arch_manjaro:
+        package_manager: yay
+        pre_install:
+          - "# AUR helper (yay) must be installed first: https://github.com/Jguer/yay"
+        commands:
+          - "yay -S --noconfirm spotify"
+
+  - id: netflix_ready
+    name: Netflix (browser-based access)
+    description: >
+      Netflix does not ship a native Linux desktop app. This entry ensures that
+      a DRM-capable browser (Firefox with Widevine) is installed and provides
+      a desktop shortcut / launch URL for Netflix. No DRM circumvention is
+      performed or facilitated.
+    licensing_notes: >
+      Netflix is a proprietary streaming service (Netflix, Inc.). This pack does
+      NOT install or bundle any Netflix software or DRM components beyond what
+      a supported browser provides. Users must have a valid Netflix account.
+    post_install_notes: >
+      To watch Netflix:
+      1. Open Firefox (installed above).
+      2. Navigate to https://www.netflix.com
+      3. Sign in with your Netflix account.
+      4. When prompted, enable DRM in Firefox Preferences > General > DRM Content.
+      Firefox includes Widevine CDM (Content Decryption Module) which is required
+      for Netflix HD playback. This is fetched automatically by Firefox from Google
+      when DRM is first enabled.
+
+      A desktop shortcut to Netflix will be created at ~/Desktop/Netflix.desktop
+    distros:
+      debian_ubuntu:
+        package_manager: apt
+        pre_install:
+          - "# Firefox must be installed first (see firefox entry above)"
+        commands:
+          - "mkdir -p ~/Desktop"
+          - "printf '[Desktop Entry]\\nVersion=1.0\\nName=Netflix\\nComment=Watch Netflix in Firefox\\nExec=firefox https://www.netflix.com\\nIcon=firefox\\nTerminal=false\\nType=Application\\nCategories=Network;VideoStreaming;\\n' > ~/Desktop/Netflix.desktop"
+          - "chmod +x ~/Desktop/Netflix.desktop"
+      fedora_rhel:
+        package_manager: dnf
+        commands:
+          - "mkdir -p ~/Desktop"
+          - "printf '[Desktop Entry]\\nVersion=1.0\\nName=Netflix\\nComment=Watch Netflix in Firefox\\nExec=firefox https://www.netflix.com\\nIcon=firefox\\nTerminal=false\\nType=Application\\nCategories=Network;VideoStreaming;\\n' > ~/Desktop/Netflix.desktop"
+          - "chmod +x ~/Desktop/Netflix.desktop"
+      arch_manjaro:
+        package_manager: pacman
+        commands:
+          - "mkdir -p ~/Desktop"
+          - "printf '[Desktop Entry]\\nVersion=1.0\\nName=Netflix\\nComment=Watch Netflix in Firefox\\nExec=firefox https://www.netflix.com\\nIcon=firefox\\nTerminal=false\\nType=Application\\nCategories=Network;VideoStreaming;\\n' > ~/Desktop/Netflix.desktop"
+          - "chmod +x ~/Desktop/Netflix.desktop"
